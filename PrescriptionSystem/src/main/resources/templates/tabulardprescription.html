@@ -1,0 +1,80 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Prescriptions</title>
+    <style>
+        table {
+            border-collapse: collapse;
+            width: 100%;
+        }
+        th, td {
+            border: 1px solid #dddddd;
+            text-align: left;
+            padding: 8px;
+        }
+        th {
+            background-color: #f2f2f2;
+        }
+    </style>
+</head>
+<body>
+    <h1>Prescriptions</h1>
+    <table id="prescriptionsTable">
+        <thead>
+            <tr>
+                <th>ID</th>
+                <th>Date</th>
+                <th>First Name</th>
+                <th>Age</th>
+                <th>Gender</th>
+                <th>Diagonis</th>
+                <th>medicines</th>
+                <th>Next visit</th>
+               
+            </tr>
+        </thead>
+        <tbody>
+          
+        </tbody>
+    </table>
+
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+    <script>
+        $(document).ready(function() {
+            $.ajax({
+                url: '/api/v1/prescriptions', 
+                method: 'GET',
+                dataType: 'json',
+                success: function(data) {
+                    displayPrescriptions(data);
+                },
+                error: function(xhr, status, error) {
+                    console.error(error);
+                }
+            });
+
+            function displayPrescriptions(prescriptions) {
+                var tableBody = $('#prescriptionsTable tbody');
+                tableBody.empty(); 
+
+                prescriptions.forEach(function(prescription) {
+                    var row = '<tr>' +
+                        '<td>' + prescription.id + '</td>' +
+                        '<td>' + prescription.date + '</td>' +
+                        '<td>' + prescription.fname + '</td>' +
+                        '<td>' + prescription.age + '</td>' +
+                        '<td>' + prescription.gender + '</td>' +
+                        '<td>' + prescription.diagnosis + '</td>' +
+                        '<td>' + prescription.medicines + '</td>' +
+                        '<td>' + prescription.visit + '</td>' +
+                       
+                        '</tr>';
+
+                    tableBody.append(row);
+                });
+            }
+        });
+    </script>
+</body>
+</html>

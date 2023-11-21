@@ -1,0 +1,54 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Drug Interactions</title>
+</head>
+<body>
+    <h1>Drug Interactions</h1>
+    <table id="interactionTable" border="1">
+        <thead>
+            <tr>
+                <th>Interaction Pair</th>
+                <th>Description</th>
+            </tr>
+        </thead>
+        <tbody id="interactionData">
+          
+        </tbody>
+    </table>
+
+    <script>
+        async function fetchData() {
+            const apiUrl = 'https://rxnav.nlm.nih.gov/REST/interaction/interaction.json?rxcui=341248';
+
+            try {
+                const response = await fetch(apiUrl);
+                const data = await response.json();
+                
+              
+                const interactions = data.interactionTypeGroup[0].interactionType[0].interactionPair;
+
+                const interactionTable = document.getElementById('interactionData');
+
+                interactions.forEach(interaction => {
+                    const row = document.createElement('tr');
+                    const pairCell = document.createElement('td');
+                    pairCell.textContent = interaction.interactionConcept[0].minConceptItem.name + ' - ' +
+                                           interaction.interactionConcept[1].minConceptItem.name;
+                    const descriptionCell = document.createElement('td');
+                    descriptionCell.textContent = interaction.description;
+
+                    row.appendChild(pairCell);
+                    row.appendChild(descriptionCell);
+                    interactionTable.appendChild(row);
+                });
+            } catch (error) {
+                console.error('Error fetching data:', error);
+            }
+        }
+
+        fetchData();
+    </script>
+</body>
+</html>
